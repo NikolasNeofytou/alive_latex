@@ -23,4 +23,10 @@ describe('Labels, refs, macros, math, comments', () => {
     expect(out).toContain('\\(E=mc^2\\)');
     expect(out).toContain('$$a^2+b^2=c^2$$');
   });
+  it('supports macro parameter defaults', () => {
+    const doc = document()
+      .defineMacro('img', 2, '\\includegraphics[width=#1]{#2}', '0.9\\textwidth');
+    const out = render(doc);
+    expect(out).toContain('\\newcommand{\\img}[2][0.9\\textwidth]{\\includegraphics[width=#1]{#2}}');
+  });
 });

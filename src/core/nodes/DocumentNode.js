@@ -9,6 +9,10 @@ class DocumentNode extends BaseNode {
   this.macros = []; // { name, params, body }
   this._labels = new Set();
   this._refs = new Set();
+  this._macroNames = new Set();
+  this._duplicateLabels = new Set();
+  this._macroRedefinitions = new Set();
+  this.plugins = []; // { preRender?, postRender? }
   }
   setClass(name, options = []) {
     this.documentClass = { name, options };
@@ -30,20 +34,31 @@ class DocumentNode extends BaseNode {
     return this;
   }
 
-  defineMacro(name, params = 0, body = '') {
-    this.macros.push({ name, params, body });
+  // defineMacro(name, params, body, firstDefault?)
+  defineMacro(name, params = 0, body = '', firstDefault) {
+    if (this._macroNames.has(name)) {
+      this._macroRedefinitions.add(name);
+    }
+    this.macros.push({ name, params, body, firstDefault });
+    this._macroNames.add(name);
     return this;
   }
 
   registerLabel(label) { this._labels.add(label); }
   registerRef(ref) { this._refs.add(ref); }
+
+  use(plugin) {
+    if (plugin && typeof plugin === 'object') this.plugins.push(plugin);
+    return this;
+  }
 }
 
 function collectNodeMetadata(doc, node) {
   if (node.type === 'command' && node.name === 'label' && node.args[0]) {
     const arg = node.args[0];
     if (arg.kind === 'mandatory' && typeof arg.value === 'string') {
-      doc.registerLabel(arg.value);
+  if (doc._labels.has(arg.value)) doc._duplicateLabels.add(arg.value);
+  doc.registerLabel(arg.value);
     }
   }
   if (node.type === 'command' && ['ref','eqref'].includes(node.name) && node.args[0]) {

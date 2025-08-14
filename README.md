@@ -45,6 +45,72 @@ Generate coverage (text summary + lcov + HTML report in coverage/):
 npm run coverage
 ```
 
+### Pretty Printing
+Pass `{ pretty: true }` to `render` for human-friendly indentation:
+```javascript
+const { document, section, itemize, item, render } = require('./src/api');
+const doc = document().add(
+	section('Intro'),
+	itemize(item('First'), item('Second'))
+);
+console.log(render(doc, { pretty: true }));
+```
+
+### Render Options
+`render(document, options)` supports:
+- `pretty` (boolean) – formatted output
+- `indent` (string) – indentation characters (default two spaces)
+- `warnings` (boolean) – include inline warning comments (default true)
+- `asObject` (boolean) – return `{ latex, warnings }` instead of string
+
+Example collecting warnings without embedding them:
+```javascript
+const { document, section, ref, render } = require('./src/api');
+const doc = document().add(section('Intro', ref('missing:sec')));
+const { latex, warnings } = render(doc, { asObject: true, warnings: false });
+console.log(warnings); // ['% WARN: Unresolved refs -> missing:sec']
+console.log(latex); // No inline WARN comment
+```
+
+### Plugins (Experimental)
+### Macros with Parameter Defaults
+You can supply a default for the first argument of a macro by passing a 4th parameter to `defineMacro(name, paramCount, body, firstDefault)`:
+```javascript
+const doc = document()
+	.defineMacro('img', 2, '\\includegraphics[width=#1]{#2}', '0.9\\textwidth');
+console.log(render(doc));
+// emits: \newcommand{\img}[2][0.9\textwidth]{\includegraphics[width=#1]{#2}}
+```
+Plugins can hook into the render lifecycle with optional `preRender(doc)` and `postRender(latex, ctx)` methods. Register a plugin on a Document via `doc.use(pluginObject)` before calling `render`.
+
+Basic shape:
+```javascript
+const plugin = {
+	preRender(doc) { /* mutate: add packages, define macros, traverse nodes */ },
+	postRender(latex, ctx) { /* return new latex or void; ctx.warnings, ctx.options */ }
+};
+doc.use(plugin);
+```
+
+Auto math package example (included as `src/plugins/autoMathPackage.js`):
+```javascript
+const { document, math, render } = require('./src/api');
+const autoMath = require('./src/plugins/autoMathPackage');
+const doc = document();
+doc.add(math('E=mc^2'));
+doc.use(autoMath());
+console.log(render(doc)); // will include \usepackage{amsmath}
+```
+
+Post-processing example:
+```javascript
+doc.use({
+	postRender(latex) { return latex + '\n% built at ' + new Date().toISOString(); }
+});
+```
+
+Return `{ latex, warnings }` via `asObject: true` if you need warning array data separate from inline comments.
+
 ## License
 ISC
 
