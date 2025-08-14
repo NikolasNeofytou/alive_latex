@@ -36,3 +36,10 @@ module.exports = {
   createElement,
   createTextNode,
 };
+
+// Deprecation notice (emit once)
+if (!global.__ALIVE_LATEX_LEGACY_WARNED__) {
+  // eslint-disable-next-line no-console
+  console.warn('[alive-latex] Warning: lom.js legacy API is deprecated and will be replaced by structured nodes. Use src/api.js going forward.');
+  global.__ALIVE_LATEX_LEGACY_WARNED__ = true;
+}

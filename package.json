@@ -4,7 +4,11 @@
   "description": "Prototype LaTeX object model utilities",
   "main": "src/lom.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
   },
   "keywords": [],
   "author": "",

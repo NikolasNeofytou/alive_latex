@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions / Ideas
+    url: https://github.com/NikolasNeofytou/alive_latex/discussions
+    about: Please use Discussions for open-ended questions or brainstorming.

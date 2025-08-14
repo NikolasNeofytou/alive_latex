@@ -1,0 +1,84 @@
+# Label configuration for GitHub label sync tools or manual creation reference.
+# You can apply these with a script using GitHub CLI:
+#   gh label create "phase:1" --color BFD4F2 --description "Phase 1 (MVP Core)"
+
+- name: phase:0
+  color: CCCCCC
+  description: Phase 0 (Foundation)
+- name: phase:1
+  color: BFD4F2
+  description: Phase 1 (MVP Core)
+- name: phase:2
+  color: C2E0C6
+  description: Phase 2 (Authoring)
+- name: phase:3
+  color: FFD8B1
+  description: Phase 3 (Plugins & CLI)
+- name: phase:4
+  color: FEF2C0
+  description: Phase 4 (DX & JSX)
+- name: phase:5
+  color: E6E6FA
+  description: Phase 5 (Quality & Performance)
+- name: phase:6
+  color: E3B7EB
+  description: Phase 6 (Ecosystem)
+
+- name: type:core
+  color: 1D76DB
+  description: Core LOM / node structures
+- name: type:render
+  color: 0052CC
+  description: Rendering / serialization logic
+- name: type:api
+  color: 5319E7
+  description: Public API surface
+- name: type:cli
+  color: 0366D6
+  description: CLI tooling
+- name: type:plugin
+  color: 0E8A16
+  description: Plugin system / extensions
+- name: type:dx
+  color: FBCA04
+  description: Developer experience improvements
+- name: type:docs
+  color: D4C5F9
+  description: Documentation
+- name: type:test
+  color: 5319E7
+  description: Testing related work
+- name: type:perf
+  color: F9D0C4
+  description: Performance optimizations
+- name: type:infra
+  color: 586069
+  description: Infrastructure / project wiring
+
+- name: enhancement
+  color: A2EEEF
+  description: Feature or enhancement request
+- name: bug
+  color: D73A4A
+  description: Something is not working
+- name: task
+  color: 0E8A16
+  description: Maintenance / standalone task
+- name: good-first-issue
+  color: 7057FF
+  description: Friendly for first-time contributors
+- name: help-wanted
+  color: 008672
+  description: Extra assistance appreciated
+- name: priority:p0
+  color: B60205
+  description: Highest priority / blocker
+- name: priority:p1
+  color: D93F0B
+  description: High priority
+- name: priority:p2
+  color: F9D0C4
+  description: Normal priority
+- name: priority:p3
+  color: EDEDED
+  description: Low priority / nice to have
