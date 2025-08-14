@@ -23,10 +23,24 @@ function serializeDocument(node) {
   const pkgs = Array.from(node.packages.entries())
     .map(([name, { options }]) => `\\usepackage${options.length ? `[${options.join(',')}]` : ''}{${name}}`)
     .join('\n');
+  const macroDefs = node.macros.map(m => `\\newcommand{\\${m.name}}${m.params > 0 ? `[${m.params}]` : ''}{${m.body}}`).join('\n');
   const body = node.body.map(serializeNode).join('\n');
-  return [docClass, pkgs, '\\begin{document}', body, '\\end{document}']
+  const validation = basicValidation(node);
+  const preambleParts = [docClass, pkgs, macroDefs].filter(Boolean).join('\n');
+  return [preambleParts, '\\begin{document}', validation, body, '\\end{document}']
     .filter(Boolean)
     .join('\n');
+}
+
+function basicValidation(doc) {
+  const missing = [];
+  for (const ref of doc._refs) {
+    if (!doc._labels.has(ref)) missing.push(ref);
+  }
+  if (missing.length) {
+    return `% WARN: Unresolved refs -> ${missing.join(', ')}`;
+  }
+  return '';
 }
 
 function serializeNode(node) {
@@ -39,6 +53,10 @@ function serializeNode(node) {
       return serializeEnvironment(node);
     case 'document':
       return serializeDocument(node);
+    case 'math':
+  return node.display ? `$$${node.content}$$` : `\\(${node.content}\\)`;
+    case 'comment':
+      return `% ${node.text}`;
     default:
       throw new Error(`Unknown node type: ${node.type}`);
   }

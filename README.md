@@ -40,6 +40,11 @@ Or watch mode:
 npm run test:watch
 ```
 
+Generate coverage (text summary + lcov + HTML report in coverage/):
+```bash
+npm run coverage
+```
+
 ## License
 ISC
 

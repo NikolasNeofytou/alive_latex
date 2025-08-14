@@ -1,4 +1,4 @@
-// Public API (Phase 1)
+// Public API (Phase 1/2 evolving)
 const factory = require('./core/factory');
 const { serializeNode } = require('./render/serialize');
 
